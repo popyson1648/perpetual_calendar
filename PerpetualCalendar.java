@@ -1,4 +1,4 @@
-import java.util.Calendar;
+import java.util.*;
 import java.io.*;
 import java.lang.*;
 
@@ -15,6 +15,8 @@ public class PerpetualCalendar {
     byte year = 0;
 
     while(true){
+      // $ の出力をおこなう？
+      System.out.println("説明"); // 説明を書く
       try {
         command = in.readLine();
         rowMonth = in.readLine();
@@ -32,20 +34,21 @@ public class PerpetualCalendar {
         continue;
       }
 
-      if (!(rowMonth == null)) { // 引数がある場合は、月と年の制限表示の処理に進む。
+      if (!(Objects.isNull(rowMonth))) { // 引数がある場合は、月と年の制限表示の処理に進む。
 
         month = Byte.parseByte(rowMonth);
         year = Byte.parseByte(rowYear);
         
         if (!(month > 1 && month < 13)) {
-          System.out.println("引数に誤りがあります。受付可能な数値は1から12です。あなたの入力した数値は" + month + "でした。");        
+          System.out.println("第一引数に誤りがあります。受付可能な数値は1から12です。");
+          continue;
         }
-        
-      }
-      
-      
-      System.out.println("OK");
+        if (!(year > 0)) {
+          System.out.println("第二引数に誤りがあります。受付可能な数値は1以上です。"); 
+          continue;
+        }
 
+      }
       
     }
   }

@@ -25,20 +25,41 @@ final static int YEAR_LIMIT_H = 9999;
     String cmd = "";
     int month = 0;
     int year = 0;
-    boolean 
+    int inspectionResult = 0;
+    
+    System.out.println("プログラム起動の旨");
+    while (true) {
+      System.out.println("コマンドの使い方等");
+      // $ の出力を行う？
 
-      // $ の出力をおこなう？
-      System.out.println("説明"); // 説明を書く
       try {
         cmdLine = in.readLine();
-      } catch (IOException e) {
+      }
+      catch (IOException e) {
         System.out.println("エラーが発生しました。入力をやり直してください。");
       }
 
-      // extractingStr() を使って、コマンドの抽出を１文字ずつ行いコマンドラインの検査を行う
-      // cmdLineInspection....
+      switch(cmdLineInspection(cmdLine)) {
+        case 0:
+          break;
+        case 1:
+          System.out.println("入力したコマンドに誤りがあります。正しいコマンドは¥"cal¥"です。");
+          continue;
+        case 2:
+          System.out.println("入力したmonthの値に誤りがあります。");
+          continue;
+        case 3:
+          System.out.println("入力したyearの値に誤りがあります。");
+          continue;
+      }
+    }
+
+// 日付の取得
+// 取得値からカレンダーをフォーマット
+// カレンダーの生成
 
   }
+
 
     // 文字列から任意の範囲の文字を取り出す関数
     public static String extractingStr(String srcVar, int extractingStart, int extractingEnd) { // 抽出される文字 x は、extractingStart　=< x < extractingEnd
@@ -46,6 +67,7 @@ final static int YEAR_LIMIT_H = 9999;
         x = srcVar.substring(extractingStart, extractingEnd);
         return x;
     }
+
 
     // コマンドライン入力内容をすべて検閲をする関数
     // cmdTypeの引数は定数command type。
@@ -88,5 +110,9 @@ final static int YEAR_LIMIT_H = 9999;
     }
 
 
-    // ToDo
-    
+// ToDo==================================================-
+// - class名を、Mainに変える。
+// - FormatCalendarクラスを作る
+// - java.util.Calendarによる日付の取得
+// - 取得値からカレンダーをフォーマット
+// - カレンダーの生成 

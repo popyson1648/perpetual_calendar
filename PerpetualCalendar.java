@@ -4,19 +4,18 @@ import java.lang.*;
 
 public class PerpetualCalendar {
 
-// Constants for extracting cmd line input values
-// The format is such an array => {000, 00, 0000}
-final static int CMD_START = 1;
-final static int CMD_END = 4;
-final static int MONTH_START = 6;
-final static int MONTH_END = 8;
-final static int YEAR_START = 10;
-final static int YEAR_END = 14;
-
-// command type
-final static String CMD = "command";
+// available command lines
+final static String COMMAND = "cal";
 final static String MONTH = "month";
 final static String YEAR = "year";
+
+// Range of possible values for each command and argument on the command line
+final static int COMMAND_LEN = 4;
+final static int MONTH_LIMIT_L = 1;
+final static int MONTH_LIMIT_H = 12;
+final static int YEAR_LIMIT_L = 1;
+final static int YEAR_LIMIT_H = 9999;
+
 
   public static void main(String[] args) {
     Calendar calendar = Calendar.getInstance();
@@ -48,43 +47,46 @@ final static String YEAR = "year";
         return x;
     }
 
-    // コマンドライン入力の検閲をする関数
-    public static boolean cmdLineInspection(Strnig srcCmd, String cmdType, int cmdLen){ //cmdTypeの引数は定数command type。
-      boolean inspectionResult = false;
-      String tempSrcCmd = "";
+    // コマンドライン入力内容をすべて検閲をする関数
+    // cmdTypeの引数は定数command type。
+    // 戻り地は、0 -> すべて問題なし 1 -> コマンドに問題あり 2-> 引数monthに問題あり 3-> 引数yearに問題あり 
+    public static int cmdLineInspection(Strnig srcCmdLine){ 
+      int inspectionResult = 0;
+      String SrcCmd = "";
+      String = compareCmd = "";
+      int srcArgm = 0;
 
-      if (cmdType.equals(CMD)) {
-        String tempCmd = "cal";  
-      }
-      if (cmdType.equals(MONTH)) {
-        int limitL = 1;
-        int limitH = 12;
-      }
-      if (cmdType.equals(YEAR)) {
-        int limitL = 1;
-        int limitH = 9999;
-      }
-      
-            for (int i<1; i<cmdLine+1; i++) { // extractingStr()の仕様により+1する。
-              tempSrcCmd = extractingStr(srcCmd, 1, i);
-              tempCmd = extractingStr(cmd, 1, i);
+      // compare Command
+        for (int i=1; i<(COMMAND_LEN+1); i++) { //上限値はextractingStr()の仕様により+1
+          srcCmd = extractingStr(srcCmdLine, 1, i);
+          compareCmd = extractingStr(COMMAND, 1, i);
 
-              if (!(tempSrcCmd.equals(tempCmd)) {
-                return inspectionResult;
-              }
-            }
+        if (!(srcCmd.equals(compareCmd)) {
+          return inspectionResult = 1;
+        }
+      } 
+
+      // compare month
+      // COMMAND_LEN+1+MONTH_LEN は、"cal 10" の "1" の位置を指す
+        srcArgm = Integer.parseInt(extractingStr(srcCmdLine,
+                                                (COMMAND_LEN+1+MONTH_LEN),
+                                                (COMMAND_LEN+1+MONTH_LEN+1));
+        if (!(srcArgm => MONTH_LIMIT_L && srcArgm <= MONTH_LIMIT_L)) {
+          return inspectionResult = 2;
+        }
+
+      // compare year
+      // COMMAND_LEN+1+MONTH_LEN+1+YEAR_LEN は、"cal 10 2000" の "2" の位置を指す
+        srcArgm = Integer.parseInt(extractingStr(srcCmdLine,
+                                                  (COMMAND_LEN+1+MONTH_LEN+1+YEAR_LEN),
+                                                  (COMMAND_LEN+1+MONTH_LEN+1+YEAR_LEN)+1));
+          if (!(srcArgm => YEAR_LIMIT_L && srcArgm <= YEAR_LIMIT_L)) {
+            return inspectionResult = 3;
+          }  
       inspectionResult = true;
       return inspectionResult;
     }
 
+
     // ToDo
-
-    // - コマンドラインの引数に無効な入力を受けたときに弾く処理
-    // - - cal
-    // - - - caaaaal, cccccccal, abc
-    // - - 12
-    // - - - 111112, 122222
-    // - - 2022
-    // - - - 2222222222202, 200000022, 2022222222222222
-
-    // コマンドライン検査でcalだけでなく数値も検査できるようにする。
+    

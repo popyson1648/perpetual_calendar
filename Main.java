@@ -131,7 +131,7 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
 
 
     // 日付の取得
-    actualMaxValForMonth = calendar.getActualMaximum(calendar.MONTH); // monthが取りえる最大値を取得。すでにmonthをCalender.MONTHに設定しているため引数としている。
+    actualMaxValForMonth = calendar.getActualMaximum(Calendar.MONTH); // monthが取りえる最大値を取得。すでにmonthをCalender.MONTHに設定しているため引数としている。
 
 
     //

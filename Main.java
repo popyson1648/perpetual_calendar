@@ -7,101 +7,88 @@ public class Main {
 // E1: IOException
 // E2: ArrayIndexOutOfBoundsException
 
-// available command lines
-final static String CMD_LINE_COMMAND = "cal";
-
 // Whitespace to be inserted to determine the number of arguments
 final static String BLANK_FOR_JUDGEMENT = " ";
 
+// available command lines
+final static String CMD_LINE_COMMAND = "cal";
+
 // Range of possible values for each command and argument on the command line
 final static int COMMAND_LEN = 4;
-final static int MONTH_MAXLEN = 2;
+final static int MONTH_MAX_LEN = 2;
 final static int MONTH_LIMIT_L = 1;
 final static int MONTH_LIMIT_H = 12;
-final static int YEAR_MAXLEN = 4;
+final static int YEAR_MAX_LEN = 4;
 final static int YEAR_LIMIT_L = 1;
 final static int YEAR_LIMIT_H = 9999;
 
-// Array corresponding to the calendar class DAY_OF_WEEK
-final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
-
+static int month = 0;
+static int year = 0;
+static int argCnt = 0;
 
   public static void main(String[] args) {
 
 
     String cmdLine = "";
-    String cmd = "";
-    int month = 0;
-    int year = 0;
 
     int[] inspectionResult = new int[4];
 
-    int argCnt = 0;
     int NumOfDigitInMonth = 0;
     int NumOfDigitInYear = 0;
-    int inspectionCode = 0;
+    int inspectionCode = -1;
 
-    int monthsAcquired = 0;
-    int yearAcquired = 0;
-    int dayAcquired = 0;
-    int actualMaxValForMonth = 0;
+    // int monthsAcquired = 0;
+    // int yearAcquired = 0;
+    // int dayAcquired = 0;
 
-
-    Calendar calendar = Calendar.getInstance();
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 
     System.out.println("プログラム起動の旨");
 
-    while (true) {
-      System.out.println("コマンドの使い方等");
-      // $ の出力を行う？
+    while (!(inspectionCode == 0)) {
+        System.out.println("コマンドの使い方等");
+        // $ の出力を行う？
 
-      try {
-        cmdLine = in.readLine();
-        cmdLine = cmdLine + BLANK_FOR_JUDGEMENT;
-      }
-      catch (IOException e) {
-        System.out.println("エラーが発生しました。エラーコード: E1");
-        continue;
-      }
+        try {
+            cmdLine = in.readLine();
+            cmdLine = cmdLine + BLANK_FOR_JUDGEMENT;
+        } catch (IOException e) {
+            System.out.println("エラーが発生しました。エラーコード: E1");
+            continue;
+        }
 
+        inspectionResult = cmdLineInspection(cmdLine); // Command lineに入力された値の検査
+        inspectionCode = inspectionResult[0];
 
-      inspectionResult = cmdLineInspection(cmdLine); // Command lineに入力された値の検査
-      inspectionCode = inspectionResult[0];
-      NumOfDigitInMonth = inspectionResult[1]; //monthの桁数を取り出す
-      NumOfDigitInYear = inspectionResult[2];
-      argCnt = inspectionResult[3];
-
-    // 検査結果の検査コードを用いて判定結果を出力
-      switch(inspectionCode) {
-        case 0:
-          break;
-        case 1:
-          System.out.println("入力したコマンドに誤りがある可能性があります。正しいコマンドは\"cal\"です。");
-          continue;
-        case 2:
-          System.out.println("入力したmonthの値に誤りがある可能性があります。");
-          continue;
-        case 3:
-          System.out.println("入力したyearの値に誤りがある可能性があります。");
-          continue;
-      }
+        // 検査結果の検査コードを用いて判定結果を出力
+        switch (inspectionCode) {
+            case 0:
+                break;
+            case 1:
+                System.out.println("入力したコマンドに誤りがある可能性があります。正しいコマンドは\"cal\"です。");
+                continue;
+            case 2:
+                System.out.println("入力したmonthの値に誤りがある可能性があります。");
+                continue;
+            case 3:
+                System.out.println("入力したyearの値に誤りがある可能性があります。");
+                continue;
+        }
     }
+
+    argCnt = inspectionResult[1];
+    NumOfDigitInMonth = inspectionResult[2]; //monthの桁数を取り出す
+    NumOfDigitInYear = inspectionResult[3];
 
     // 引数に応じて、cmdLine の文字列を分解してそれぞれの変数に格納
     switch (argCnt) {
-        case 0 :
-            cmd = cmdLine.substring(1, COMMAND_LEN+1);
-            break;
         case 1 :
-            cmd = cmdLine.substring(1, COMMAND_LEN+1);
             month = Integer.parseInt(cmdLine.substring((COMMAND_LEN+2),
                                                       (COMMAND_LEN + 1 + NumOfDigitInMonth)
                                                       ));
             break;
         case 2 :
-            cmd = cmdLine.substring(1, COMMAND_LEN+1);
             month = Integer.parseInt(cmdLine.substring((COMMAND_LEN+2),
                                                       (COMMAND_LEN + 1 + NumOfDigitInMonth)
                                                       ));
@@ -110,7 +97,7 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
                                                      ));
     }
 
-
+/*
     // 引数の数、値に応じた日付をセット。
     calendar.setLenient(true); // Calendarを厳密モードにする。get引数の違反検知に使う。
     calendar.clear(); // カレンダーフィールドをクリア。　
@@ -129,14 +116,7 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
         System.out.println("エラーが発生しました。エラーコード: E2");
     }
 
-
-    // 日付の取得
-    actualMaxValForMonth = calendar.getActualMaximum(Calendar.MONTH); // monthが取りえる最大値を取得。すでにmonthをCalender.MONTHに設定しているため引数としている。
-
-
-    //
-
-
+*/
 
 // 日付の取得
 // 取得値からカレンダーをフォーマット
@@ -144,7 +124,7 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
 
   }
 
-    // コマンドライン入力内容をすべて検閲をする関数
+    // コマンドライン入力内容をすべて検査をする関数
     // 戻り値
         // inspectionResul: 0 -> すべて問題なし, 1 -> コマンドに問題あり, 2-> 引数monthに問題あり, 3-> 引数yearに問題あり
         // monthValSize: monthの桁数。
@@ -164,7 +144,7 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
         int argCnt = 0;
         String extractedStr = "";
         int inspectionResult = 0;
-        int[] result = {inspectionResult, monthValSize, yearValSize, argCnt};
+        int[] result = {inspectionResult, argCnt, monthValSize, yearValSize};
 
     // Command
         for (int i=1; i<(COMMAND_LEN+1); i++) { //上限値はextractingStr()の仕様により+1
@@ -202,7 +182,7 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
 
             // Year
             // (COMMAND_LEN + 1 + MONTH_MAXLEN + 2)は、"cal 10 1234" の "1" の位置を指す.
-            srcYearStr = srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 6));
+            srcYearStr = srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAX_LEN + 2), (COMMAND_LEN + 6));
 
             for (int i = 1; i < 5; i++) {
                 extractedStr = srcYearStr.substring(i, i + 1);
@@ -213,17 +193,17 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
             }
             switch (yearValSize) {
                 case 1:
-                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2),
-                            (COMMAND_LEN + 1 + MONTH_MAXLEN + 3)));
+                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAX_LEN + 2),
+                            (COMMAND_LEN + 1 + MONTH_MAX_LEN + 3)));
                 case 2:
-                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2),
-                            (COMMAND_LEN + 1 + MONTH_MAXLEN + 4)));
+                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAX_LEN + 2),
+                            (COMMAND_LEN + 1 + MONTH_MAX_LEN + 4)));
                 case 3:
-                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2),
-                            (COMMAND_LEN + 1 + MONTH_MAXLEN + 5)));
+                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAX_LEN + 2),
+                            (COMMAND_LEN + 1 + MONTH_MAX_LEN + 5)));
                 case 4:
-                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2),
-                            (COMMAND_LEN + 1 + MONTH_MAXLEN + 6)));
+                    srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAX_LEN + 2),
+                            (COMMAND_LEN + 1 + MONTH_MAX_LEN + 6)));
             }
             if (!(srcYearInt >= YEAR_LIMIT_L && srcYearInt <= YEAR_LIMIT_L)) {
                 inspectionResult = 3;
@@ -236,12 +216,9 @@ final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th",
 
 
 
-// ToDo list ========================================================================
+  // ToDo list ========================================================================
 
-// - arg を argに名称を変更する
-// - class名を、Mainに変える。
-// - FormatCalendarクラスを作る
-// - java.util.Calendarによる日付の取得
+// static 変数 month と year と argCnt がstaticの必要があるか確認
 // - 取得値からカレンダーをフォーマット
 // - カレンダーの生成
 

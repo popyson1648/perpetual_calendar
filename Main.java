@@ -1,7 +1,5 @@
 import java.util.*;
 import java.io.*;
-import java.lang.*;
-import java.util.calendar;
 
 public class Main {
 
@@ -25,7 +23,7 @@ final static int YEAR_LIMIT_L = 1;
 final static int YEAR_LIMIT_H = 9999;
 
 // Array corresponding to the calendar class DAY_OF_WEEK
-final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+final static String[] WEEK_OF_THE_DAY_NAMES = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
 
 
   public static void main(String[] args) {
@@ -38,7 +36,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
     
     int[] inspectionResult = {0, 0, 0};
     
-    int argmCnt = 0;
+    int argCnt = 0;
     int NumOfDigitInMonth = 0;
     int NumOfDigitInYear = 0;
     int inspectionCode = 0;
@@ -61,11 +59,11 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
 
       try {
         cmdLine = in.readLine();
-        cmdline = cmdLine + BLANK_FOR_JUDGEMENT;
+        cmdLine = cmdLine + BLANK_FOR_JUDGEMENT;
       }
       catch (IOException e) {
         System.out.println("エラーが発生しました。エラーコード: E1");
-        continue:
+        continue;
       }
       
       
@@ -79,7 +77,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         case 0:
           break;
         case 1:
-          System.out.println("入力したコマンドに誤りがある可能性があります。正しいコマンドは¥"cal¥"です。");
+          System.out.println("入力したコマンドに誤りがある可能性があります。正しいコマンドは\"cal\"です。");
           continue;
         case 2:
           System.out.println("入力したmonthの値に誤りがある可能性があります。");
@@ -94,16 +92,16 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
     // 引数の数を判定
     // monthとyearの桁数が1以上の場合は引数が存在するとして判定する。
     if (NumOfDigitInMonth > 0) { // 第一引数がない場合は、第二引数もない
-        argmCnt = cmdCnt + 1;
+        argCnt = argCnt + 1;
         
         if (NumOfDigitInYear > 0) {
-            argmCnt = cmdCnt + 1;
+            argCnt = argCnt + 1;
         }
     }
     
     
     // 引数に応じて、cmdLine の文字列を分解してそれぞれの変数に格納
-    switch (cmdCnt) {
+    switch (argCnt) {
         case 0 :
             cmd = cmdLine.substring(1, COMMAND_LEN+1);
             break;
@@ -129,7 +127,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
     calendar.clear(); // カレンダーフィールドをクリア。　
     
     try {
-        switch (cmdCnt) { // 大文字の変数はCalenderクラスのフィールド。
+        switch (argCnt) { // 大文字の変数はCalenderクラスのフィールド。
             case 0 :
                 break;
             case 1 :
@@ -144,7 +142,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
     
     
     // 日付の取得
-    actualMaxValForMonth = calendar.getActualMaximum(Calender.MONTH); // monthが取りえる最大値を取得。すでにmonthをCalender.MONTHに設定しているため引数としている。
+    actualMaxValForMonth = calendar.getActualMaximum(calendar.MONTH); // monthが取りえる最大値を取得。すでにmonthをCalender.MONTHに設定しているため引数としている。
 
 
     // 
@@ -166,12 +164,12 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         String SrcCmd = "";
         String compareCmd = "";
         
-        String srcMonthSTR = "";
-        int    srcMonthINT  = 0;
+        String srcMonthStr = "";
+        int    srcMonthInt  = 0;
         int    monthValSize = 0;
 
-        String srcYearSTR = "";
-        int    srcYearINT  = 0;
+        String srcYearStr = "";
+        int    srcYearInt  = 0;
         int    yearValSize = 0;
         
         String extractedStr = "";
@@ -181,10 +179,10 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
     // Command
 
         for (int i=1; i<(COMMAND_LEN+1); i++) { //上限値はextractingStr()の仕様により+1
-            srcCmd = srcCmdLine.substring(i, i+1);
+          srcCmdLine = srcCmdLine.substring(i, i+1);
             compareCmd = CMD_LINE_COMMAND.substring(i, i+1); // substring(i, i+1) は、抽出対象の文字が右に進んでいく記述。
         
-            if (!(srcCmd.equals(compareCmd)) {
+            if (!(srcCmdLine.equals(compareCmd))) {
                 inspectionResult = 1;
                 return result;
             }
@@ -193,59 +191,60 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
     // Month
     // (COMMAND_LEN + 2) は、"cal_9_"の 9。 
 
-        srcMonthSTR = srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 3));
+        srcMonthStr = srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 3));
 
         for (int i=1; i<3; i++) { // monthの桁を判別。空白を検出しなかった回数が桁数。
-            extractedStr = srcMonthSTR.substring(i, i+1);
+            extractedStr = srcMonthStr.substring(i, i+1);
             if (!(extractedStr.equals(" "))) { 
                 monthValSize = monthValSize + 1; 
             }
         }
         switch (monthValSize) {
             case 1: // 9_ -> 9
-                srcMonthINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 3))); // 1桁目のみ抽出。
+                srcMonthInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 3))); // 1桁目のみ抽出。
             case 2: // 10 -> 10
-                srcMonthINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 4))); // 1桁目のみ抽出。   
+                srcMonthInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 4))); // 1桁目のみ抽出。   
         }
-        if (!(srcMonthINT => MONTH_LIMIT_L && srcMonthINT <= MONTH_LIMIT_L)) {
+        if (!(srcMonthInt >= MONTH_LIMIT_L && srcMonthInt <= MONTH_LIMIT_L)) {
             inspectionResult = 2;
         }
 
   
   // Year
-  // (COMMAND_LEN + 1 + MONTH_LEN + 2)は、"cal 10 1234" の "1" の位置を指す.
+  // (COMMAND_LEN + 1 + MONTH_MAXLEN + 2)は、"cal 10 1234" の "1" の位置を指す.
 
-        srcYearSTR = srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 6));
+        srcYearStr = srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 6));
 
         for (int i=1; i<5; i++) { 
-            extractedStr = srcYearSTR.substring(i, i+1);
+            extractedStr = srcYearStr.substring(i, i+1);
             if (!(extractedStr.equals(" "))) { 
                 yearValSize = yearValSize + 1; 
             }
         }
         switch (yearValSize) {
             case 1 :
-                srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 3));
+                srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 3)));
             case 2 :
-                srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 4));
+                srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 4)));
             case 3 :
-                srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 5));
+                srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 5)));
             case 4 :
-                srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 6));
+                srcYearInt = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 6)));
         }            
-        if (!(srcYearInt => YEAR_LIMIT_L && srcYearInt <= YEAR_LIMIT_L)) {
+        if (!(srcYearInt >= YEAR_LIMIT_L && srcYearInt <= YEAR_LIMIT_L)) {
             inspectionResult = 3;
         }  
             
-      return inspectionResult;
+      return result;
     }
+  }
     
     
 
 
 // ToDo list ========================================================================
 
-// - argm を argに名称を変更する
+// - arg を argに名称を変更する
 // - class名を、Mainに変える。
 // - FormatCalendarクラスを作る
 // - java.util.Calendarによる日付の取得
@@ -278,14 +277,14 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
 
 /*-----------------------------------------------------------------------
     // 引数の数を判定する関数
-        // 戻り値 argmCnt: 0 -> commandのみで引数なし, 1 -> 引数が一つ(month), 2 -> 引数が二つ(year) 
+        // 戻り値 argCnt: 0 -> commandのみで引数なし, 1 -> 引数が一つ(month), 2 -> 引数が二つ(year) 
         // cal_          space*1 -> argument count 0
         // cal_12_       space*2 -> argument count 1
         // cal_12_2022_  space*3 -> argument count 2
 
    
-    public static int judgeTheNumOfArgm(Strnig srcCmdLine) {
-        int argmCnt = 0;
+    public static int judgeTheNumOfarg(Strnig srcCmdLine) {
+        int argCnt = 0;
         char extractedStr = "";
         int blankCnt = 0;
         
@@ -298,13 +297,13 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         
         switch (blankCnt) {
             case 1:
-                return argmCnt;
+                return argCnt;
             case 2:
-                argmCnt = 1;
-                return argmCnt;
+                argCnt = 1;
+                return argCnt;
             case 3:
-                argmCnt = 2;
-                return argmCnt;
+                argCnt = 2;
+                return argCnt;
         }
     }
 */
@@ -315,7 +314,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         // inspectionResul: 0 -> すべて問題なし, 1 -> コマンドに問題あり, 2-> 引数monthに問題あり, 3-> 引数yearに問題あり 
         // monthValSize: monthの桁数。
         // yearValSize: yearの桁数。
-    public static int[] cmdLineInspection(String srcCmdLine, int argmCnt){ 
+    public static int[] cmdLineInspection(String srcCmdLine, int argCnt){ 
         String SrcCmd = "";
         String compareCmd = "";
         
@@ -332,7 +331,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         int[] result = {inspectionResult, monthValSize, yearValSize};
 
         // Command
-        if (argmCnt == 0) {
+        if (argCnt == 0) {
             for (int i=1; i<(COMMAND_LEN+1); i++) { //上限値はextractingStr()の仕様により+1
                 srcCmd = srcCmdLine.substring(i, i+1);
                 compareCmd = COMMAND.substring(i, i+1); // substring(i, i+1) は、抽出対象の文字が右に進んでいく記述。
@@ -347,7 +346,7 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
 
         // Month
         // (COMMAND_LEN + 2) は、"cal_9_"の 9。 
-        if (argmCnt == 1 || argmCnt == 2) {
+        if (argCnt == 1 || argCnt == 2) {
             srcMonthSTR = srcCmdLine.substring((COMMAND_LEN + 2), (COMMAND_LEN + 3));
 
             for (int i=1; i<3; i++) { // monthの桁を判別。空白を検出しなかった回数が桁数。
@@ -368,9 +367,9 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         }
       
       // Year
-      // (COMMAND_LEN + 1 + MONTH_LEN + 2)は、"cal 10 1234" の "1" の位置を指す.
-        if (argmCnt == 2) {
-            srcYearSTR = srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 6));
+      // (COMMAND_LEN + 1 + MONTH_MAXLEN + 2)は、"cal 10 1234" の "1" の位置を指す.
+        if (argCnt == 2) {
+            srcYearSTR = srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 6));
 
             for (int i=1; i<5; i++) { 
                 extractedStr = srcYearSTR.substring(i, i+1);
@@ -380,13 +379,13 @@ final static String[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
             }
             switch (yearValSize) {
                 case 1:
-                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 3));
+                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 3));
                 case 2:
-                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 4));
+                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 4));
                 case 3:
-                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 5));
+                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 5));
                 case 4:
-                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_LEN + 2), (COMMAND_LEN + 1 + MONTH_LEN + 6));
+                    srcYearINT = Integer.parseInt(srcCmdLine.substring((COMMAND_LEN + 1 + MONTH_MAXLEN + 2), (COMMAND_LEN + 1 + MONTH_MAXLEN + 6));
             }            
             if (!(srcYearInt => YEAR_LIMIT_L && srcYearInt <= YEAR_LIMIT_L)) {
                 inspectionResult = 3;

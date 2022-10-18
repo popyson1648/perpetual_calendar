@@ -25,6 +25,7 @@ final static int YEAR_LIMIT_H = 9999;
 static int month = 0;
 static int year = 0;
 static int argCnt = 0;
+static int NumOfDigitInYear = 0;
 
   public static void main(String[] args) {
 
@@ -34,7 +35,6 @@ static int argCnt = 0;
     int[] inspectionResult = new int[4];
 
     int NumOfDigitInMonth = 0;
-    int NumOfDigitInYear = 0;
     int inspectionCode = -1;
 
     // int monthsAcquired = 0;

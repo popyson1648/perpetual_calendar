@@ -37,6 +37,11 @@ static int[] monthOfDayLine3 = new int[20];
 static int[] monthOfDayLine4 = new int[20];
 static int[] monthOfDayLine5 = new int[20];
 
+static int mainMonth  = Main.month;
+static int mainYear   = Main.year;
+static int mainArgCnt = Main.argCnt;
+static int mainNumOfDigitInYear = Main.NumOfDigitInYear;
+
 static Calendar calendar = Calendar.getInstance();
 
 
@@ -52,40 +57,44 @@ static Calendar calendar = Calendar.getInstance();
     }
 
 
-    public static String[] formatTitle(int month, int year){
-        int lenMonthName =  0;
-        int lenYear = 0;
+    public static String[] formatTitle() {
+        int monthNameLen = 0;
+        int monthNameAndYearLen = monthNameLen + mainNumOfDigitInYear;
+        int mid = 20 / 2;
 
         initStrArr(titleLine);
 
-        switch (month) {
+        // month の名前の長さを取得
+        switch (mainMonth) {
             case 1:
-                lenMonthName = MONTH_1.length();
+                monthNameLen = MONTH_1.length();
             case 2:
-                lenMonthName = MONTH_2.length();
+                monthNameLen = MONTH_2.length();
             case 3:
-                lenMonthName = MONTH_3.length();
+                monthNameLen = MONTH_3.length();
             case 4:
-                lenMonthName = MONTH_4.length();
+                monthNameLen = MONTH_4.length();
             case 5:
-                lenMonthName = MONTH_5.length();
+                monthNameLen = MONTH_5.length();
             case 6:
-                lenMonthName = MONTH_6.length();
+                monthNameLen = MONTH_6.length();
             case 7:
-                lenMonthName = MONTH_7.length();
+                monthNameLen = MONTH_7.length();
             case 8:
-                lenMonthName = MONTH_8.length();
+                monthNameLen = MONTH_8.length();
             case 9:
-                lenMonthName = MONTH_9.length();
+                monthNameLen = MONTH_9.length();
             case 10:
-                lenMonthName = MONTH_10.length();
+                monthNameLen = MONTH_10.length();
             case 11:
-                lenMonthName = MONTH_11.length();
+                monthNameLen = MONTH_11.length();
             case 12:
-                lenMonthName = MONTH_12.length();
+                monthNameLen = MONTH_12.length();
+            }
 
+            if (aaaaaaaaaa % 2 == 0) {
 
-        }
+            }
 
     }
 
@@ -101,18 +110,19 @@ static Calendar calendar = Calendar.getInstance();
         calendar.setLenient(true);  // Calendarを厳密モードにする。get引数の違反検知に使う。
         calendar.clear();           // カレンダーフィールドをクリア。　
         try {
-            switch (Main.argCnt) {  // 大文字の変数はCalenderクラスのフィールド。
+            switch (mainArgCnt) {  // 大文字の変数はCalenderクラスのフィールド。
                 case 0 :
                     break;
                 case 1 :
-                    calendar.set(Calendar.MONTH, Main.month);
+                    calendar.set(Calendar.MONTH, mainMonth);
                 case 2 :
-                    calendar.set(Calendar.MONTH, Main.month);
-                    calendar.set(Calendar.YEAR, Main.year);
+                    calendar.set(Calendar.MONTH, mainMonth);
+                    calendar.set(Calendar.YEAR, mainYear);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("エラーが発生しました。エラーコード: E2");
         }
+
         actualMaxValForMonth = calendar.getActualMaximum(Calendar.MONTH); // monthが取りえる最大値を取得。すでにmonthをCalender.MONTHに設定しているため引数としている。
 
 
@@ -120,3 +130,85 @@ static Calendar calendar = Calendar.getInstance();
 
 
 }
+
+// memo
+/*
+
+titleの配置
+-- 挿入文字数(Len)を求める。20 / Len = middle
+Len = 13;
+mid = 20/2;  // 10
+lenMid = Math.ceil(Len/2);  // 6.5 -> 7
+
+1. 月名の長さから、空白挿入位置を確定
+2. titleLineの半分から左の要素数が確定(t_Left)
+3. t_Left - 月名の長さ
+
+--
+Weの間が10(mid)。
+Su_Mo_Tu_We_Th_Fr_Sa
+    ______|____
+   September 1990  9  type-1  mid+3(空白の位置)
+    ______|____
+    February 1990  8  type-1  mid+3
+    ______|____
+    January 1990   7  type-2  mid+2
+    ______|____
+     August 1990   6  type-2  mid+2
+    ______|____
+     March 1990    5  type-3  mid+1
+    ______|____
+       June 1990   4  type-2  mid+2
+    ______|____
+      May 1990     3  type-4  mid-1
+
+    February 1990
+Su Mo Tu We Th Fr Sa
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28
+
+   September 1990
+Su Mo Tu We Th Fr Sa
+                   1
+ 2  3  4  5  6  7  8
+ 9 10 11 12 13 14 15
+16 17 18 19 20 21 22
+23 24 25 26 27 28 29
+30
+
+     March 1990
+Su Mo Tu We Th Fr Sa
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30 31
+
+      May 1990
+Su Mo Tu We Th Fr Sa
+       1  2  3  4  5
+ 6  7  8  9 10 11 12
+13 14 15 16 17 18 19
+20 21 22 23 24 25 26
+27 28 29 30 31
+
+     August 1990
+Su Mo Tu We Th Fr Sa
+          1  2  3  4
+ 5  6  7  8  9 10 11
+12 13 14 15 16 17 18
+19 20 21 22 23 24 25
+26 27 28 29 30 31
+
+      June 1990
+Su Mo Tu We Th Fr Sa
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+
+*/

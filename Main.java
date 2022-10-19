@@ -22,27 +22,25 @@ final static int YEAR_MAX_LEN = 4;
 final static int YEAR_LIMIT_L = 1;
 final static int YEAR_LIMIT_H = 9999;
 
-static int month = 0;
-static int year = 0;
-static int argCnt = 0;
-static int numOfDigitYear = 0;
 
-  public static void main(String[] args) {
-
+public static void main(String[] args) {
 
     String cmdLine = "";
+    int month = 0;
+    int year = 0;
+    int argCnt = 0;
+    int numOfDigitYear = 0;
+    int numOfDigitInMonth = 0;
 
     int[] inspectionResult = new int[4];
-
-    int NumOfDigitInMonth = 0;
     int inspectionCode = -1;
 
-    // int monthsAcquired = 0;
-    // int yearAcquired = 0;
-    // int dayAcquired = 0;
+    int legitimateMonth = 0;
+    int legitimateYear = 0;
+    int legitiDayOfWeek = 0;
+    int legitiEndDayOfMonth = 0;
 
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
 
     System.out.println("プログラム起動の旨");
 
@@ -78,58 +76,59 @@ static int numOfDigitYear = 0;
     }
 
     argCnt = inspectionResult[1];
-    NumOfDigitInMonth = inspectionResult[2]; //monthの桁数を取り出す
+    numOfDigitInMonth = inspectionResult[2]; //monthの桁数を取り出す
     numOfDigitYear = inspectionResult[3];
 
     // 引数に応じて、cmdLine の文字列を分解してそれぞれの変数に格納
     switch (argCnt) {
-        case 1 :
-            month = Integer.parseInt(cmdLine.substring((COMMAND_LEN+2),
-                                                      (COMMAND_LEN + 1 + NumOfDigitInMonth)
-                                                      ));
+        case 1:
+            month = Integer.parseInt(cmdLine.substring((COMMAND_LEN + 2),
+                    (COMMAND_LEN + 1 + numOfDigitInMonth)));
             break;
-        case 2 :
-            month = Integer.parseInt(cmdLine.substring((COMMAND_LEN+2),
-                                                      (COMMAND_LEN + 1 + NumOfDigitInMonth)
-                                                      ));
-            year = Integer.parseInt(cmdLine.substring((COMMAND_LEN + 1 + NumOfDigitInMonth + 2),
-                                                     (COMMAND_LEN + 1 + NumOfDigitInMonth + 1 + numOfDigitYear + 1)
-                                                     ));
+        case 2:
+            month = Integer.parseInt(cmdLine.substring((COMMAND_LEN + 2),
+                    (COMMAND_LEN + 1 + numOfDigitInMonth)));
+            year = Integer.parseInt(cmdLine.substring((COMMAND_LEN + 1 + numOfDigitInMonth + 2),
+                    (COMMAND_LEN + 1 + numOfDigitInMonth + 1 + numOfDigitYear + 1)));
     }
+//
+    Calendar calendar = Calendar.getInstance();  // CalendarのgetInstanceメソッドで得られるCalendarオブジェクトは、現在の日付と時間を返す。（現在の日付と時間が初期値）。
 
-/*
-    // 引数の数、値に応じた日付をセット。
-    calendar.setLenient(true); // Calendarを厳密モードにする。get引数の違反検知に使う。
-    calendar.clear(); // カレンダーフィールドをクリア。　
-
+    calendar.setLenient(true);  // Calendarを厳密モードにする。無効な日付にエラーを吐く。　
     try {
-        switch (argCnt) { // 大文字の変数はCalenderクラスのフィールド。
+        // 引数に応じてCalendarクラスのフィールドに値をセット。引数入力がない場合は、現在の日付、時間が使われる。
+        switch (argCnt) {
             case 0 :
                 break;
             case 1 :
-                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.MONTH, month-1); // CalendarクラスのMONTHフィールドは 0 が JANUARY であるため -1をする。
             case 2 :
-                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.MONTH, month-1);
                 calendar.set(Calendar.YEAR, year);
+            }
         }
-    } catch (ArrayIndexOutOfBoundsException e) {
-        System.out.println("エラーが発生しました。エラーコード: E2");
-    }
+        catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("エラーが発生しました。エラーコード: E2");
+        }
+        legitimateMonth = calendar.get(Calendar.MONTH);
+        legitimateYear = calendar.get(Calendar.YEAR);
 
-*/
+        legitiDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // 今月の最初の曜日(一日目の曜日)を取得
+        legitiEndDayOfMonth = calendar.getActualMaximum(Calendar.MONTH); // monthの最終日を取得。
 
-// 日付の取得
-// 取得値からカレンダーをフォーマット
-// カレンダーの生成
+        // フォーマット処理
 
+        // 出力
   }
 
+
     // コマンドライン入力内容をすべて検査をする関数
-    // 戻り値
-        // inspectionResul: 0 -> すべて問題なし, 1 -> コマンドに問題あり, 2-> 引数monthに問題あり, 3-> 引数yearに問題あり
-        // monthValSize: monthの桁数。
-        // yearValSize: yearの桁数。
     public static int[] cmdLineInspection(String srcCmdLine){
+        // 戻り値
+            // inspectionResul: 0 -> すべて問題なし, 1 -> コマンドに問題あり, 2-> 引数monthに問題あり, 3-> 引数yearに問題あり
+            // monthValSize: monthの桁数。
+            // yearValSize: yearの桁数。
+
         String srcCmd = "";
         String compareCmd = "";
 

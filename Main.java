@@ -25,7 +25,7 @@ final static int YEAR_LIMIT_H = 9999;
 static int month = 0;
 static int year = 0;
 static int argCnt = 0;
-static int NumOfDigitInYear = 0;
+static int numOfDigitYear = 0;
 
   public static void main(String[] args) {
 
@@ -79,7 +79,7 @@ static int NumOfDigitInYear = 0;
 
     argCnt = inspectionResult[1];
     NumOfDigitInMonth = inspectionResult[2]; //monthの桁数を取り出す
-    NumOfDigitInYear = inspectionResult[3];
+    numOfDigitYear = inspectionResult[3];
 
     // 引数に応じて、cmdLine の文字列を分解してそれぞれの変数に格納
     switch (argCnt) {
@@ -93,7 +93,7 @@ static int NumOfDigitInYear = 0;
                                                       (COMMAND_LEN + 1 + NumOfDigitInMonth)
                                                       ));
             year = Integer.parseInt(cmdLine.substring((COMMAND_LEN + 1 + NumOfDigitInMonth + 2),
-                                                     (COMMAND_LEN + 1 + NumOfDigitInMonth + 1 + NumOfDigitInYear + 1)
+                                                     (COMMAND_LEN + 1 + NumOfDigitInMonth + 1 + numOfDigitYear + 1)
                                                      ));
     }
 

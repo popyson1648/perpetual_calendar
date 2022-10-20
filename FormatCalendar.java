@@ -1,59 +1,65 @@
 import java.lang.ref.Cleaner;
 import java.time.Year;
 import java.util.*;
+
 public class FormatCalendar {
 
-/*
-October 2000       // titleLine[]
-Su Mo Tu We Th Fr Sa   // weekOfDayLine[]
- 1  2  3  4  5  6  7   // monthOfDayLine1[]
- 8  9 10 11 12 13 14   // monthOfDayLine2[]
-15 16 17 18 19 20 21   // monthOfDayLine3[]
-22 23 24 25 26 27 28   // monthOfDayLine4[]
-29 30 31               // monthOfDayLine5[]
-*/
+    /*
+    October 2000       // titleLine[]
+    Su Mo Tu We Th Fr Sa   // weekOfDayLine[]
+     1  2  3  4  5  6  7   // monthOfDayLine1[]
+     8  9 10 11 12 13 14   // monthOfDayLine2[]
+    15 16 17 18 19 20 21   // monthOfDayLine3[]
+    22 23 24 25 26 27 28   // monthOfDayLine4[]
+    29 30 31               // monthOfDayLine5[]
+    */
 
-final static String MONTH_1  = "January";
-final static String MONTH_2  = "February";
-final static String MONTH_3  = "March";
-final static String MONTH_4  = "April";
-final static String MONTH_5  = "May";
-final static String MONTH_6  = "June";
-final static String MONTH_7  = "July";
-final static String MONTH_8  = "August";
-final static String MONTH_9  = "September";
-final static String MONTH_10 = "October";
-final static String MONTH_11 = "November";
-final static String MONTH_12 = "December";
+    final static String MONTH_1 = "January";
+    final static String MONTH_2 = "February";
+    final static String MONTH_3 = "March";
+    final static String MONTH_4 = "April";
+    final static String MONTH_5 = "May";
+    final static String MONTH_6 = "June";
+    final static String MONTH_7 = "July";
+    final static String MONTH_8 = "August";
+    final static String MONTH_9 = "September";
+    final static String MONTH_10 = "October";
+    final static String MONTH_11 = "November";
+    final static String MONTH_12 = "December";
 
-final static String DELIMITED_BLANK = " ";
-final static String BLANK = " ";
+    final static String DELIMITED_BLANK = " ";
+    final static String BLANK = " ";
 
-final static String[] WEEK_OF_DAY_TYPE_ARR = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
-final static String[] WEEK_OF_DAY_LINE = {"Su", BLANK, "Mo", BLANK, "Tu", BLANK, "We", BLANK, "Th", BLANK, "Fr", BLANK, "Sa"};
+    final static String[] WEEK_OF_DAY_TYPE_ARR = { "", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+    final static String[] WEEK_OF_DAY_LINE = { "Su", BLANK, "Mo", BLANK, "Tu", BLANK, "We", BLANK, "Th", BLANK, "Fr",
+            BLANK, "Sa" };
 
-final static String[] DAYS_STR = {" ", "1", " ", "2", " ", "3", " ", "4", " ", "5", " ", "6", " ", "7", " ", "8", " ", "9", "1", "0", "1", "1", "1", "2", "1", "3", "1", "4", "1", "5", "1", "6", "1", "7", "1", "8", "1", "9", "2", "0", "2", "1", "2", "2", "2", "3", "2", "4", "2", "5", "2", "6", "2", "7", "2", "8", "2", "9", "3", "0", "3", "1"};
+    // lengh 62
+    final static String[] DAYS_STR = { " ", "1", " ", "2", " ", "3", " ", "4", " ", "5", " ", "6", " ", "7", " ", "8",
+            " ", "9", "1", "0", "1", "1", "1", "2", "1", "3", "1", "4", "1", "5", "1", "6", "1", "7", "1", "8", "1",
+            "9", "2", "0", "2", "1", "2", "2", "2", "3", "2", "4", "2", "5", "2", "6", "2", "7", "2", "8", "2", "9",
+            "3", "0", "3", "1" };
 
-final static int LINE_LENGTH = 20;
+    final static int LINE_LENGTH = 20;
 
-static String[] titleLine       = new String[20];
-static String[] dayOfMonthLine1 = new String[20];
-static String[] dayOfMonthLine2 = new String[20];
-static String[] dayOfMonthLine3 = new String[20];
-static String[] dayOfMonthLine4 = new String[20];
-static String[] dayOfMonthLine5 = new String[20];
+    static String[] titleLine = new String[20];
+    static String[] dayOfMonthLine1 = new String[20];
+    static String[] dayOfMonthLine2 = new String[20];
+    static String[] dayOfMonthLine3 = new String[20];
+    static String[] dayOfMonthLine4 = new String[20];
+    static String[] dayOfMonthLine5 = new String[20];
 
-    public static String[] initStrArr(String[] targetArray){
-        for (String x: targetArray) x = "";
+    public static String[] initStrArr(String[] targetArray) {
+        for (String x : targetArray)
+            x = "";
         return targetArray;
     }
 
-
-    public static int[] initIntArr(int[] targetArray){
-        for (int x: targetArray) x = 0;
+    public static int[] initIntArr(int[] targetArray) {
+        for (int x : targetArray)
+            x = 0;
         return targetArray;
     }
-
 
     public static String[] formatTitleLine(int month, int year, int numOfDigitYear) {
 
@@ -84,7 +90,6 @@ static String[] dayOfMonthLine5 = new String[20];
         boolean isDelimitedBlankInsertionCpl = false;
         boolean isMonthNameInsertionCpl = false;
         boolean isYearNumInsertionCpl = false;
-
 
         initStrArr(titleLine);
 
@@ -138,87 +143,97 @@ static String[] dayOfMonthLine5 = new String[20];
                 monthName = MONTH_12;
                 monthNameLen = MONTH_12.length();
                 workMonthNameLen = monthNameLen;
-            }
+        }
 
-            // monthの長さから区切り空白の挿入位置タイプを判定
-            switch (monthNameLen) {
-                case 3 : delimitedBlankPositionType = 4;
-                case 4 : delimitedBlankPositionType = 2;
-                case 5 : delimitedBlankPositionType = 3;
-                case 6 : delimitedBlankPositionType = 2;
-                case 7 : delimitedBlankPositionType = 2;
-                case 8 : delimitedBlankPositionType = 1;
-                case 9 : delimitedBlankPositionType = 1;
-            }
+        // monthの長さから区切り空白の挿入位置タイプを判定
+        switch (monthNameLen) {
+            case 3:
+                delimitedBlankPositionType = 4;
+            case 4:
+                delimitedBlankPositionType = 2;
+            case 5:
+                delimitedBlankPositionType = 3;
+            case 6:
+                delimitedBlankPositionType = 2;
+            case 7:
+                delimitedBlankPositionType = 2;
+            case 8:
+                delimitedBlankPositionType = 1;
+            case 9:
+                delimitedBlankPositionType = 1;
+        }
 
-            // 区切り空白の挿入位置を変数に設定
-            switch (delimitedBlankPositionType) {
-                case 1: delimitedBlankPosition = lineMidPotision + 3;
-                case 2: delimitedBlankPosition = lineMidPotision + 2;
-                case 3: delimitedBlankPosition = lineMidPotision + 1;
-                case 4: delimitedBlankPosition = lineMidPotision - 1;
-            }
+        // 区切り空白の挿入位置を変数に設定
+        switch (delimitedBlankPositionType) {
+            case 1:
+                delimitedBlankPosition = lineMidPotision + 3;
+            case 2:
+                delimitedBlankPosition = lineMidPotision + 2;
+            case 3:
+                delimitedBlankPosition = lineMidPotision + 1;
+            case 4:
+                delimitedBlankPosition = lineMidPotision - 1;
+        }
 
-            // titleLineのtopとbottomの長さを計算し変数に設定
-            lenLineTop = delimitedBlankPosition - 1;
-            lenLineBottom = LINE_LENGTH - delimitedBlankPosition;
+        // titleLineのtopとbottomの長さを計算し変数に設定
+        lenLineTop = delimitedBlankPosition - 1;
+        lenLineBottom = LINE_LENGTH - delimitedBlankPosition;
 
-            // titleLineのtopとbottomの「穴埋め用空白」の挿入数を計算し変数に設定
-            lineTopBlankCnt = lenLineTop - monthNameLen;
-            lineBottomBlankCnt = lenLineBottom - numOfDigitYear;
-            workLineBottomBlankCnt = lineBottomBlankCnt;
-            workLineTopBlankCnt = lineTopBlankCnt;
+        // titleLineのtopとbottomの「穴埋め用空白」の挿入数を計算し変数に設定
+        lineTopBlankCnt = lenLineTop - monthNameLen;
+        lineBottomBlankCnt = lenLineBottom - numOfDigitYear;
+        workLineBottomBlankCnt = lineBottomBlankCnt;
+        workLineTopBlankCnt = lineTopBlankCnt;
 
-            // titleLine[] に 穴埋め用空白, 月名, 区切り空白, 西暦年数, 穴埋め用空白 を挿入
-            // トップの穴埋め用空白を挿入
-            while (!(isTopBlankInsertionCpl)) {
-                for (int i=arrayIndexCnt; i<workLineTopBlankCnt+1; i++) {
-                    titleLine[i] = BLANK;
-                }
-                isBottomBlankInsertionCpl = true;
+        // titleLine[] に 穴埋め用空白, 月名, 区切り空白, 西暦年数, 穴埋め用空白 を挿入
+        // トップの穴埋め用空白を挿入
+        while (!(isTopBlankInsertionCpl)) {
+            for (int i = arrayIndexCnt; i < workLineTopBlankCnt + 1; i++) {
+                titleLine[i] = BLANK;
             }
-            // 月名
-            while (!(isMonthNameInsertionCpl)) {
-                // 初期値のみが異なり、条件、インクリメント量は同じであるようなfor処理を実装している
-                int s = 1; //substring用。
-                int i = arrayIndexCnt;
-                while (i < workMonthNameLen && s < workMonthNameLen) {
-                    extractingMonthStr = monthName.substring(s, s+1);
-                    titleLine[i] = extractingMonthStr;
-                    s++;
-                    i++;
-                }
-                isMonthNameInsertionCpl = true;
+            isBottomBlankInsertionCpl = true;
+        }
+        // 月名
+        while (!(isMonthNameInsertionCpl)) {
+            // 初期値のみが異なり、条件、インクリメント量は同じであるようなfor処理を実装している
+            int s = 1; //substring用。
+            int i = arrayIndexCnt;
+            while (i < workMonthNameLen && s < workMonthNameLen) {
+                extractingMonthStr = monthName.substring(s, s + 1);
+                titleLine[i] = extractingMonthStr;
+                s++;
+                i++;
             }
-            // 区切り空白
-            while (!(isDelimitedBlankInsertionCpl)) {
-                titleLine[arrayIndexCnt] = DELIMITED_BLANK;
-                isDelimitedBlankInsertionCpl = true;
+            isMonthNameInsertionCpl = true;
+        }
+        // 区切り空白
+        while (!(isDelimitedBlankInsertionCpl)) {
+            titleLine[arrayIndexCnt] = DELIMITED_BLANK;
+            isDelimitedBlankInsertionCpl = true;
+        }
+        // 西暦
+        while (!(isYearNumInsertionCpl)) {
+            yearStr = String.valueOf(year); // int型yearをString型に変換
+            int s = 1;
+            int i = arrayIndexCnt;
+            while (i < workNumOfDigitYear && s < workNumOfDigitYear) {
+                extractingYearStr = yearStr.substring(s, s + 1);
+                titleLine[i] = extractingYearStr;
+                s++;
+                i++;
             }
-            // 西暦
-            while (!(isYearNumInsertionCpl)) {
-                yearStr = String.valueOf(year); // int型yearをString型に変換
-                int s = 1;
-                int i = arrayIndexCnt;
-                while (i < workNumOfDigitYear && s < workNumOfDigitYear) {
-                    extractingYearStr = yearStr.substring(s, s+1);
-                    titleLine[i] = extractingYearStr;
-                    s++;
-                    i++;
-                }
-                isYearNumInsertionCpl = true;
+            isYearNumInsertionCpl = true;
+        }
+        // ボトムの穴埋め用空白を挿入
+        while (!(isBottomBlankInsertionCpl)) {
+            for (int i = arrayIndexCnt; i < workLineBottomBlankCnt + 1; i++) {
+                titleLine[i] = BLANK;
             }
-            // ボトムの穴埋め用空白を挿入
-            while (!(isBottomBlankInsertionCpl)) {
-                for (int i=arrayIndexCnt; i<workLineBottomBlankCnt+1; i++) {
-                    titleLine[i] = BLANK;
-                }
-                isBottomBlankInsertionCpl = true;
-            }
+            isBottomBlankInsertionCpl = true;
+        }
 
-            return titleLine;
+        return titleLine;
     }
-
 
     public static String[] formatDayOfMonthLine(int month, int year, int endDayOfMonth, int dayOfWeekType) {
         // Su Mo Tu We Th Fr Sa
@@ -236,81 +251,67 @@ static String[] dayOfMonthLine5 = new String[20];
         // 18 19 20 21 22 23 24
         // 25 26 27 28
 
-
-        //   !!!!!!!!!!!!!!!!!ToDooooooooo!!!!!!!!!!!! DAYS_STR は、一桁の数字は「空白」と「数字」に分ける。二桁の数字は、「一桁目」と「二桁目」に分ける。
-        int firstDayIndex = 0;
-        int lineStoreLimit = 0;
+        int NumOfBlankToStore = 0;
+        int firstDayIdx = 0;
+        int nextDaysIdx = 0;
+        int storeDaysIdxLimit = 0;
 
         // DayOfMonthLine1[] に 1（1日目）を格納する場所（添え字）を決定し、変数に設定する。
         switch (dayOfWeekType) {
-            case 1 : firstDayIndex = 1;
-            case 2 : firstDayIndex = 4;
-            case 3 : firstDayIndex = 7;
-            case 4 : firstDayIndex = 10;
-            case 5 : firstDayIndex = 13;
-            case 6 : firstDayIndex = 16;
-            case 7 : firstDayIndex = 19;
+            case 1 : firstDayIdx = 1;
+            case 2 : firstDayIdx = 4;
+            case 3 : firstDayIdx = 7;
+            case 4 : firstDayIdx = 10;
+            case 5 : firstDayIdx = 13;
+            case 6 : firstDayIdx = 16;
+            case 7 : firstDayIdx = 19;
         }
+        NumOfBlankToStore = firstDayIdx - 1;
+        storeDaysIdxLimit = endDayOfMonth * 2; // 15 のような二桁の数字を "1" "5" としているため添字は二倍になる。
 
-        lineStoreLimit = endDayOfMonth;
-
-        // DayOfMonthLine1[]
-        for (int i=0; i<21; i++) {
-            if (firstDayIndex > 0 && lineStoreLimit < 10) {  //格納するものがBLANKか、10以下の数字の場合は空白を挿入する。
+        // DayOfMonthLine1[] へ格納
+        for (int i=0; i<LINE_LENGTH; i++) {
+            // 一日目以前には空白を挿入
+            if (NumOfBlankToStore > 0) {
                 dayOfMonthLine1[i] = BLANK;
+                dayOfMonthLine1[i + 1] = BLANK;
             }
-            // firstDayIndex が0になるまでは空白を格納する。空白の後に格納するため i+1。
-            dayOfMonthLine1[i+1] = BLANK;
-            // 数字を格納。
-            if (i<10) {
-                dayOfMonthLine1[i+1] = 一桁の数字;
-            }
-            dayOfMonthLine1[i]
+            NumOfBlankToStore--;
 
+            // 数字を格納。
+            if (NumOfBlankToStore < 1) { // 空白の挿入が完了したか
+                dayOfMonthLine1[i] = DAYS_STR[nextDaysIdx]; // 例: 1日目なら " "
+                nextDaysIdx += 1;
+                dayOfMonthLine1[i + 1] = DAYS_STR[nextDaysIdx + 1]; // 例: 1日目なら "1"
+                nextDaysIdx += 1;
             }
-            dayOfMonthLine1[i] = DAYS_STR[i];
         }
 
-        // 以下の場合は、BLANK を挿入する。
-        // @ lineStoreLimit が 10 より小さい場合
-        // @ 挿入するものが BLANK の場合（firatDayIndexが0ではない場合）、
+        // DayOfMonthLine2[] へ格納
+        for (int i = 0; i < LINE_LENGTH; i++) {
+
+        }
+
+        // DayOfMonthLine3[] へ格納
+        for (int i = 0; i < LINE_LENGTH; i++) {
+
+        }
+
+        // DayOfMonthLine4[] へ格納
+        for (int i = 0; i < LINE_LENGTH; i++) {
+
+        }
+
+        // DayOfMonthLine5[] へ格納
+        for (int i = 0; i < LINE_LENGTH; i++) {
+
+        }
+
     }
 
-
-
-
-
-
-
-
-// -------------------------------------------------------------------------------------------------------------------------------
-    public static void FUNCTION_FOR_MAIN() {
-
-        Calendar calendar = Calendar.getInstance();  // CalendarのgetInstanceメソッドで得られるCalendarオブジェクトは、現在の日付と時間を返す。（現在の日付と時間が初期値）。
-
-        calendar.setLenient(true);  // Calendarを厳密モードにする。無効な日付にエラーを吐く。　
-        try {
-            // 引数に応じてCalenarクラスのフィールドに値をセット。引数入力がない場合は、現在の日付、時間が使われる。
-            switch (argCnt) {
-                case 0 :
-                    break;
-                case 1 :
-                    calendar.set(Calendar.MONTH, month-1); // CalendarクラスのMONTHフィールドは 0 が JANUARY であるため -1をする。
-                case 2 :
-                    calendar.set(Calendar.MONTH, month-1);
-                    calendar.set(Calendar.YEAR, year);
-                }
-            }
-            catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("エラーが発生しました。エラーコード: E2");
-            }
-            month = calendar.get(Calendar.MONTH);
-            year = calendar.get(Calendar.YEAR);
-
-            dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // 今月の最初の曜日(一日目の曜日)を取得
-            endDayOfMonth = calendar.getActualMaximum(Calendar.MONTH); // monthの最終日を取得。
-    }
-
+    // 以下の場合は、BLANK を挿入する。
+    // @ lineStoreLimit が 10 より小さい場合
+    // @ 挿入するものが BLANK の場合（firatDayIndexが0ではない場合）、
 
 }
 

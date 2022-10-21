@@ -35,10 +35,13 @@ public class FormatCalendar {
             BLANK, "Sa" };
 
     // lengh 62
+
     final static String[] DAYS_STR = { " ", "1", " ", "2", " ", "3", " ", "4", " ", "5", " ", "6", " ", "7", " ", "8",
             " ", "9", "1", "0", "1", "1", "1", "2", "1", "3", "1", "4", "1", "5", "1", "6", "1", "7", "1", "8", "1",
             "9", "2", "0", "2", "1", "2", "2", "2", "3", "2", "4", "2", "5", "2", "6", "2", "7", "2", "8", "2", "9",
             "3", "0", "3", "1" };
+    final static String[] ARRANGEMENT_TYPE = {"num", "num", "dblank", "num", "num", "dblank", "num", "num", "dblank", "num", "num", "dblank", "num", "num", "dblank", "num", "num", "dblank", "num", "num"};
+
 
     final static int LINE_LENGTH = 20;
 
@@ -236,82 +239,146 @@ public class FormatCalendar {
     }
 
     public static String[] formatDayOfMonthLine(int month, int year, int endDayOfMonth, int dayOfWeekType) {
-        // Su Mo Tu We Th Fr Sa
-        //  1  2  3  4  5  6  7
+        
+        /*
+        . -> Blank
+        * -> Delimited blank
+        
+            February 1990
+        Su Mo Tu We Th Fr Sa
+        ..*..*..*..*.1  2  3
+         4  5  6  7  8  9 10
+        11 12 13 14 15 16 17
+        18 19 20 21 22 23 24
+        25 26 27 28
 
-        //     S   u   _   M   o   _   T   u   _   W   e   _   T   h   _   F   r   _   S   a
-        //    [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
-        //     0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19
+        Su Mo Tu We Th Fr Sa
+         1  2  3  4  5  6  7
 
-        //     February 1990
-        // Su Mo Tu We Th Fr Sa
-        // ..*..*..*..*.1  2  3
-        //  4  5  6  7  8  9 10
-        // 11 12 13 14 15 16 17
-        // 18 19 20 21 22 23 24
-        // 25 26 27 28
+         S   u   _   M   o   _   T   u   _   W   e   _   T   h   _   F   r   _   S   a
+        [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+         0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19
+        */
 
-        int NumOfBlankToStore = 0;
-        int firstDayIdx = 0;
         int nextDaysIdx = 0;
+
+        int firstDayIdx = 0;  // dayOfMonthLine1の処理に必要な変数
+        int lastBlankIdx = 0;    // dayOfMonthLine5の処理に必要な変数
+
+        // dayOfMonthLine1 と dayOfMonthLine5 の処理に必要な変数
+        int numOfBlankToStore = 0; // 格納する空白の数
         int storeDaysIdxLimit = 0;
 
-        // DayOfMonthLine1[] に 1（1日目）を格納する場所（添え字）を決定し、変数に設定する。
+
+        // dayOfMonthLine1 の処理
+        // DayOfMonthLine1[] に 1 (1日目)を格納する場所(添え字)を決定し、変数に設定する。
         switch (dayOfWeekType) {
-            case 1 : firstDayIdx = 1;
-            case 2 : firstDayIdx = 4;
-            case 3 : firstDayIdx = 7;
-            case 4 : firstDayIdx = 10;
-            case 5 : firstDayIdx = 13;
-            case 6 : firstDayIdx = 16;
-            case 7 : firstDayIdx = 19;
+            case 1 : firstDayIdx = 0;  break;
+            case 2 : firstDayIdx = 3;  break;
+            case 3 : firstDayIdx = 6;  break;
+            case 4 : firstDayIdx = 9;  break;
+            case 5 : firstDayIdx = 12; break;
+            case 6 : firstDayIdx = 15; break;
+            case 7 : firstDayIdx = 18; break;
         }
-        NumOfBlankToStore = firstDayIdx - 1;
-        storeDaysIdxLimit = endDayOfMonth * 2; // 15 のような二桁の数字を "1" "5" としているため添字は二倍になる。
+        numOfBlankToStore = firstDayIdx - 2; 
+        storeDaysIdxLimit = endDayOfMonth * 2; // "15" のような二桁の数字を "1" "5" としているため添字は二倍する。
 
-        // DayOfMonthLine1[] へ格納
+        // DayOfMonthLine1[]への格納処理
         for (int i=0; i<LINE_LENGTH; i++) {
-            // 一日目以前には空白を挿入
-            if (NumOfBlankToStore > 0) {
-                dayOfMonthLine1[i] = BLANK;
-                dayOfMonthLine1[i + 1] = BLANK;
+
+            // Stores date numbers and blank
+             if (ARRANGEMENT_TYPE[i].equals("num")) {
+                 // Store Days
+                if (numOfBlankToStore < 1) {  
+                    dayOfMonthLine1[i] = DAYS_STR[nextDaysIdx];
+                    nextDaysIdx += 1;
+                }
+                // Store Blank
+                if (numOfBlankToStore > 0) {  
+                    dayOfMonthLine1[i] = BLANK;
+                    numOfBlankToStore -= 1;
+                }
             }
-            NumOfBlankToStore--;
-
-            // 数字を格納。
-            if (NumOfBlankToStore < 1) { // 空白の挿入が完了したか
-                dayOfMonthLine1[i] = DAYS_STR[nextDaysIdx]; // 例: 1日目なら " "
-                nextDaysIdx += 1;
-                dayOfMonthLine1[i + 1] = DAYS_STR[nextDaysIdx + 1]; // 例: 1日目なら "1"
-                nextDaysIdx += 1;
+            // Store Delimited blank
+            if (ARRANGEMENT_TYPE[i].equals("dblank")) {  
+                dayOfMonthLine1[i] = DELIMITED_BLANK;
             }
         }
 
-        // DayOfMonthLine2[] へ格納
-        for (int i = 0; i < LINE_LENGTH; i++) {
+        storesDayOfMonth(dayOfMonthLine2, nextDaysIdx);  // dayOfMonthLine2 の処理
+        storesDayOfMonth(dayOfMonthLine3, nextDaysIdx);  // dayOfMonthLine3 の処理
+        storesDayOfMonth(dayOfMonthLine4, nextDaysIdx);  // dayOfMonthLine4 の処理
+        
+        // dayOfMonthLine5 の処理
+        numOfBlankToStore = 0;
+        numOfBlankToStore = 
+        lastBlankIdx = 
 
-        }
+        // dayOfMonthLine5[]への格納処理
 
-        // DayOfMonthLine3[] へ格納
-        for (int i = 0; i < LINE_LENGTH; i++) {
-
-        }
-
-        // DayOfMonthLine4[] へ格納
-        for (int i = 0; i < LINE_LENGTH; i++) {
-
-        }
-
-        // DayOfMonthLine5[] へ格納
-        for (int i = 0; i < LINE_LENGTH; i++) {
-
-        }
 
     }
 
-    // 以下の場合は、BLANK を挿入する。
-    // @ lineStoreLimit が 10 より小さい場合
-    // @ 挿入するものが BLANK の場合（firatDayIndexが0ではない場合）、
+
+    // 日付を格納する関数
+    private static void storesDayOfMonth(String[] dayOfMonthLine, int nextDaysIdx) {
+        for (int i=nextDaysIdx; i<LINE_LENGTH; i++) {
+            if (ARRANGEMENT_TYPE.equals("num")) {
+                dayOfMonthLine[i] = DAYS_STR[i];
+            }
+            if (ARRANGEMENT_TYPE.equals("dblank")) {
+                dayOfMonthLine[i] = DELIMITED_BLANK;
+            }
+        }
+    }
+
+    private static void storesDayOfMonthAndBlank(String[] dayOfMonthLine, int numOfBlankToStore, int dayOfMonthLineNum, int nextDaysIdx, int lastBlankIdx, int storeDaysIdxLimit) {
+        if (dayOfMonthLineNum == 1) 
+            for (int i=nextDaysIdx; i<LINE_LENGTH; i++) {
+
+                // Stores date numbers and blank
+                if (ARRANGEMENT_TYPE[i].equals("num")) {
+                     // Store Days
+                    if (numOfBlankToStore < 1) {  
+                        dayOfMonthLine[i] = DAYS_STR[nextDaysIdx];
+                        nextDaysIdx += 1;
+                    }
+                    // Store Blank
+                    if (numOfBlankToStore > 0) {  
+                        dayOfMonthLine[i] = BLANK;
+                        numOfBlankToStore -= 1;
+                    }
+                }
+                // Store Delimited blank
+                if (ARRANGEMENT_TYPE[i].equals("dblank")) {  
+                    dayOfMonthLine[i] = DELIMITED_BLANK;
+                }
+            }
+        }
+        if (dayOfMonthLineNum == 5) {
+            for (int i=nextDaysIdx; i<storeDaysIdxLimit; i++) {
+                
+                // Store Blank
+                if (numOfBlankToStore > 0) {  
+                    dayOfMonthLine[i] = BLANK;
+                    numOfBlankToStore -= 1;
+                }
+                // Stores date numbers and blank
+                if (ARRANGEMENT_TYPE[i].equals("num")) {
+                     // Store Days
+                    if (numOfBlankToStore < 1) {  
+                        dayOfMonthLine[i] = DAYS_STR[nextDaysIdx];
+                        nextDaysIdx += 1;
+                    }
+                }
+                // Store Delimited blank
+                if (ARRANGEMENT_TYPE[i].equals("dblank")) {  
+                    dayOfMonthLine[i] = DELIMITED_BLANK;
+                }    
+            }   
+        }
+    }
 
 }
 

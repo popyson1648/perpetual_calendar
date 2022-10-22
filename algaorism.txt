@@ -61,13 +61,13 @@ End day = 23;2
                 }
                 // Store Blank
                 if (numOfBlankToStore > 0) {
-                    dayOfMonthLine1[i] = BLANK;
+                    dayOfMonthLine1[i] = " ";
                     numOfBlankToStore -= 1;
                 }
             }
             // Store Delimited blank
             if (ARRANGEMENT_TYPE[i].equals("dblank")) {
-                dayOfMonthLine1[i] = DELIMITED_BLANK;
+                dayOfMonthLine1[i] = " ";
             }
         }
 
@@ -78,10 +78,10 @@ for (int i=nextDaysIdx; i<LINE_LENGTH; i++) {
 
             if (endDayOfMonth == (nextDaysIdx / 2)) { // DAYS_STR格納の終了の検知
                 if (ARRANGEMENT_TYPE[i].equals("num")) {
-                    dayOfMonthLine[i] = BLANK;
+                    dayOfMonthLine[i] = " ";
                 }
                 if (ARRANGEMENT_TYPE[i].equals("dblank")) {
-                    dayOfMonthLine[i] = DELIMITED_BLANK;
+                    dayOfMonthLine[i] = " ";
                 }
             }
             else {
@@ -91,7 +91,7 @@ for (int i=nextDaysIdx; i<LINE_LENGTH; i++) {
                     nextDaysIdx += 1;
                 }
                 if (ARRANGEMENT_TYPE[i].equals("dblank")) {
-                    dayOfMonthLine[i] = DELIMITED_BLANK;
+                    dayOfMonthLine[i] = " ";
                 }
             }
         }

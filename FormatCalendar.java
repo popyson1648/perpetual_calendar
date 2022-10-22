@@ -24,11 +24,8 @@ public class FormatCalendar {
     final static String MONTH_11 = "November";
     final static String MONTH_12 = "December";
 
-    final static String DELIMITED_BLANK = " ";
-    final static String BLANK = " ";
-
-    final static String[] WEEK_OF_DAY_LINE = { "Su", BLANK, "Mo", BLANK, "Tu", BLANK, "We", BLANK, "Th", BLANK, "Fr",
-            BLANK, "Sa" };
+    final static String[] WEEK_OF_DAY_LINE = { "Su", " ", "Mo", " ", "Tu", " ", "We", " ", "Th", " ", "Fr",
+            " ", "Sa" };
 
     final static String[] DAYS_STR = { " ", "1", " ", "2", " ", "3", " ", "4", " ", "5", " ", "6", " ", "7", " ", "8",
             " ", "9", "1", "0", "1", "1", "1", "2", "1", "3", "1", "4", "1", "5", "1", "6", "1", "7", "1", "8", "1",
@@ -171,45 +168,53 @@ public class FormatCalendar {
         // トップの穴埋め用ブランク文字を挿入
         while (!(isTopBlankInsertionCpl)) {
             for (int i = arrayIndexCnt; i < workLineTopBlankCnt + 1; i++) {
-                titleLine[i] = BLANK;
+                titleLine[i] = " ";
+                arrayIndexCnt += 1;
             }
-            isBottomBlankInsertionCpl = true;
+            isTopBlankInsertionCpl = true;
         }
         // 月名
         while (!(isMonthNameInsertionComplete)) {
             // 初期値のみが異なり、条件、インクリメント量は同じであるようなfor処理を実装している
-            int beginIdx = 1; //substring用。
+            int beginIdx = 0; //substring用。
             int i = arrayIndexCnt;
-            while (i < workMonthNameLen && beginIdx < workMonthNameLen) {
+            int storedCnt = 0;
+            while (storedCnt < workMonthNameLen && beginIdx < workMonthNameLen + 1) {
                 extractingMonthStr = monthName.substring(beginIdx, beginIdx + 1);
                 titleLine[i] = extractingMonthStr;
+                storedCnt += 1;
                 beginIdx++;
                 i++;
+                arrayIndexCnt++;
             }
             isMonthNameInsertionComplete = true;
         }
         // 区切りブランク文字
         while (!(isDelimitedBlankInsertionCpl)) {
-            titleLine[arrayIndexCnt] = DELIMITED_BLANK;
+            titleLine[arrayIndexCnt] = " ";
+            arrayIndexCnt += 1;
             isDelimitedBlankInsertionCpl = true;
         }
         // 西暦
         while (!(isYearNumInsertionCpl)) {
             yearStr = String.valueOf(year); // int型yearをString型に変換
-            int beginIdx = 1;
+            int beginIdx = 0;
             int i = arrayIndexCnt;
-            while (i < numOfDigitYear && beginIdx < numOfDigitYear) {
+            int storedCnt = 0;
+            while (storedCnt < numOfDigitYear && beginIdx < numOfDigitYear + 1) {
                 extractingYearStr = yearStr.substring(beginIdx, beginIdx + 1);
                 titleLine[i] = extractingYearStr;
+                storedCnt += 1;
                 beginIdx++;
                 i++;
+                arrayIndexCnt += 1;
             }
             isYearNumInsertionCpl = true;
         }
         // ボトムの穴埋め用ブランク文字を挿入
         while (!(isBottomBlankInsertionCpl)) {
-            for (int i = arrayIndexCnt; i < workLineBottomBlankCnt + 1; i++) {
-                titleLine[i] = BLANK;
+            for (int i=arrayIndexCnt; i<LINE_LENGTH; i++) {
+                titleLine[i] = " ";
             }
             isBottomBlankInsertionCpl = true;
         }
@@ -271,13 +276,13 @@ public class FormatCalendar {
                 }
                 // Store Blank
                 if (numOfBlankToStore > 0) {  
-                    dayOfMonthLine1[i] = BLANK;
+                    dayOfMonthLine1[i] = " ";
                     numOfBlankToStore -= 1;
                 }
             }
             // Store Delimited blank
             if (ARRANGEMENT_TYPE[i].equals("dblank")) {  
-                dayOfMonthLine1[i] = DELIMITED_BLANK;
+                dayOfMonthLine1[i] = " ";
             }
         }
         storesDayOfMonth(dayOfMonthLine2, nextDaysIdx);  // dayOfMonthLine2 の処理
@@ -346,7 +351,7 @@ public class FormatCalendar {
                 dayOfMonthLine[i] = DAYS_STR[i];
             }
             if (ARRANGEMENT_TYPE[i].equals("dblank")) {
-                dayOfMonthLine[i] = DELIMITED_BLANK;
+                dayOfMonthLine[i] = " ";
             }
         }
     }
@@ -357,7 +362,7 @@ public class FormatCalendar {
 
             if (endDayOfMonth == (nextDaysIdx / 2)) { // DAYS_STR格納の終了の検知
                 if (ARRANGEMENT_TYPE[i].equals("num")) {
-                    dayOfMonthLine[i] = BLANK;
+                    dayOfMonthLine[i] = " ";
                 }
             }
             else {
@@ -368,7 +373,7 @@ public class FormatCalendar {
                 }
             }
             if (ARRANGEMENT_TYPE[i].equals("dblank")) {
-                dayOfMonthLine[i] = DELIMITED_BLANK;
+                dayOfMonthLine[i] = " ";
             }
         }
     }

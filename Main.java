@@ -15,7 +15,7 @@ public static void main(String[] args) {
     int numOfDigitYear = 0;
     int numOfDigitInMonth = 0;
 
-    int[] inspectionResult = new int[4];
+    int[] inspectionResult = new int[3];
     int inspectionCode = -1;
 
     int legitimateMonth = 0;
@@ -41,16 +41,18 @@ public static void main(String[] args) {
 
         // 検査結果の検査コードを用いて判定結果を出力
         switch (inspectionCode) {
-            case 0: break;
-            case 1:
+            case 0 : break;
+            case 1 :
                 System.out.println("入力したコマンドに誤りがある可能性があります。正しいコマンドは\"cal\"です。");
                 continue;
-            case 2:
+            case 2 :
                 System.out.println("入力したmonthの値に誤りがある可能性があります。");
                 continue;
-            case 3:
+            case 3 :
                 System.out.println("入力したyearの値に誤りがある可能性があります。");
-                break;
+                continue;
+            case 4 :
+                System.out.println("入力形式に誤りがある可能性があります。");
         }
     }
 
@@ -80,20 +82,19 @@ public static void main(String[] args) {
             case 2 :
                 calendar.set(Calendar.MONTH, month-1);
                 calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
             }
         }
         catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("エラーが発生しました。エラーコード: E2");
         }
 
-    legitimateMonth = calendar.get(Calendar.MONTH);  // Calendarクラスを使用して月を取得
-    legitimateYear = calendar.get(Calendar.YEAR);
-
     legitDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);  // 今月の最初の曜日(一日目の曜日)を取得
-    legitEndDayOfMonth = calendar.getActualMaximum(Calendar.MONTH);  // monthの最終日を取得。
+    legitEndDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);  // monthの最終日を取得。
+
 
     // カレンダーをフォーマット
-    FormatCalendar.formatTitleLine(legitimateMonth, legitimateYear, numOfDigitYear);
+    FormatCalendar.formatTitleLine(month, year, numOfDigitYear);
     FormatCalendar.formatDayOfMonthLine(legitEndDayOfMonth, legitDayOfWeek);
 
     // フォーマットされたカレンダーを出力。

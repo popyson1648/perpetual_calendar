@@ -1,5 +1,5 @@
 public class InputInspection {
-
+    static int[] result = new int[3];
     public static int[] inspection(String srcCmdLine) {
         // 戻り地
         // inspectionResult: 0-> すべて問題なし, 1-> コマンドに問題あり, 2-> 引数monthに問題あり, 3-> 引数yearに問題あり, 4-> コマンドラインの入力形式が不正
@@ -29,7 +29,6 @@ public class InputInspection {
 
         int argCnt = 0;
         int inspectionResult = 0;
-        int[] result = {inspectionResult, argCnt, numOfDigitYear};
 
 
         srcCmdLine += CHECK_BLANK; // チェックに使用するブランクをコマンドライン末尾に追加
@@ -38,6 +37,7 @@ public class InputInspection {
         cmdLineLen = srcCmdLine.length();
         if (!(cmdLineLen > 3 && cmdLineLen < 13)) {
             inspectionResult = 4;
+            storeResult(result, inspectionResult, argCnt, numOfDigitYear);
             return result;
         }
 
@@ -51,6 +51,7 @@ public class InputInspection {
         }
         if (!(blankCnt > 0 && blankCnt < 5)) {
             inspectionResult = 4;
+            storeResult(result, inspectionResult, argCnt, numOfDigitYear);
             return result;
         }
 
@@ -59,13 +60,15 @@ public class InputInspection {
 
         if (!(srcCmd.matches("cal"))) {
             inspectionResult = 1;
+            storeResult(result, inspectionResult, argCnt, numOfDigitYear);
             return result;
         }
 
         // 引数の間に空白がない場合を検知
-        extractedStr = srcCmdLine.substring(4, 5);
+        extractedStr = srcCmdLine.substring(3, 4);
         if (!(extractedStr.matches(" "))) {
             inspectionResult = 4;
+            storeResult(result, inspectionResult, argCnt, numOfDigitYear);
             return result;
         }
 
@@ -91,6 +94,7 @@ public class InputInspection {
             }
             if (!(srcMonthInt >= MONTH_LIMIT_L && srcMonthInt <= MONTH_LIMIT_H)) {
                 inspectionResult = 2;
+                storeResult(result, inspectionResult, argCnt, numOfDigitYear);
                 return result;
             }
 
@@ -103,6 +107,7 @@ public class InputInspection {
             }
             if (!(extractedStr.matches(" "))) {
                 inspectionResult = 4;
+                storeResult(result, inspectionResult, argCnt, numOfDigitYear);
                 return result;
             }
 
@@ -126,9 +131,18 @@ public class InputInspection {
             }
             if (!(srcYearInt >= YEAR_LIMIT_L && srcYearInt <= YEAR_LIMIT_H)) {
                 inspectionResult = 3;
+                storeResult(result, inspectionResult, argCnt, numOfDigitYear);
                 return result;
             }
         }
+        storeResult(result, inspectionResult, argCnt, numOfDigitYear);
         return result;
     }
+    
+    private static void storeResult(int[] result, int inspectionResult, int argCnt, int numOfDigitYear) {
+        result[0] = inspectionResult;
+        result[1] = argCnt;
+        result[2] = numOfDigitYear;
+    }
+    
 }

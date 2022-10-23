@@ -9,19 +9,17 @@ public class Main {
 public static void main(String[] args) {
 
     String cmdLine = null;
+
+    int argCnt = 0;
     int month = 0;
     int year = 0;
-    int argCnt = 0;
     int numOfDigitYear = 0;
-    int numOfDigitInMonth = 0;
 
-    int[] inspectionResult = new int[3];
+    int[] inspectionResult = new int[5];
     int inspectionCode = -1;
 
-    int legitimateMonth = 0;
-    int legitimateYear = 0;
-    int legitDayOfWeek = 0;
-    int legitEndDayOfMonth = 0;
+    int firstDayOfWeek = 0;
+    int endDayOfMonth = 0;
 
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("プログラム起動の旨");
@@ -57,28 +55,28 @@ public static void main(String[] args) {
     }
 
     argCnt = inspectionResult[1];
-    numOfDigitYear = inspectionResult[2];  // yearの桁数
-
-    // 引数に応じて、cmdLine の文字列を分解してそれぞれの変数に格納
-    switch (argCnt) {
-        case 1 -> month = Integer.parseInt(cmdLine.substring(4, 6));
-        case 2 -> {
-            month = Integer.parseInt(cmdLine.substring(4, 6));
-            year = Integer.parseInt(cmdLine.substring(7, 11));
-        }
-    }
+    month = inspectionResult[2];
+    year = inspectionResult[3];
+    numOfDigitYear = inspectionResult[4];
 
     // カレンダー操作
     Calendar calendar = Calendar.getInstance();  // CalendarのgetInstanceメソッドで得られるCalendarオブジェクトは、現在の日付と時間を返す。（現在の日付と時間が初期値）。
 
     calendar.setLenient(true);  // Calendarを厳密モードにする。無効な日付にエラーを吐く。　
     try {
-        // 引数に応じてCalendarクラスのフィールドに値をセット。引数入力がない場合は、現在の日付、時間が使われる。
+        // 「今月の最初の曜日(一日目の曜日)」や「monthの最終日」を得るために、引数に応じてCalendarクラスのフィールドに値をセット。
+        // 引数入力がない場合は、現在のmonth, year, yearの桁数を各変数セット。FormatCalendarクラスのフォーマット関数群に使用する。
+        // 引数が1(monthだけ)の場合、year, yearの桁数を各変数セット。
         switch (argCnt) {
             case 0 :
-                break;
+                month = (calendar.get(Calendar.MONTH)) +1 ; // CalendarクラスのMONTHフィールドは 0 が JANUARY であるため、+1する。Calendarクラスで使用する値ではなく、そのままmonthとして利用するためである。例えば今月が10月なら、取得される値は9のため+1して10にする。
+                year = calendar.get(Calendar.YEAR);
+                numOfDigitYear = String.valueOf(calendar.get(Calendar.YEAR)).length();
             case 1 :
                 calendar.set(Calendar.MONTH, month-1); // CalendarクラスのMONTHフィールドは 0 が JANUARY であるため -1 をする。month は JANUARY を 1 としている。
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                year = calendar.get(Calendar.YEAR);
+                numOfDigitYear = String.valueOf(calendar.get(Calendar.YEAR)).length();
             case 2 :
                 calendar.set(Calendar.MONTH, month-1);
                 calendar.set(Calendar.YEAR, year);
@@ -89,13 +87,13 @@ public static void main(String[] args) {
             System.out.println("エラーが発生しました。エラーコード: E2");
         }
 
-    legitDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);  // 今月の最初の曜日(一日目の曜日)を取得
-    legitEndDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);  // monthの最終日を取得。
+    firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);  // 今月の最初の曜日(一日目の曜日)を取得
+    endDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);  // monthの最終日を取得。
 
 
     // カレンダーをフォーマット
     FormatCalendar.formatTitleLine(month, year, numOfDigitYear);
-    FormatCalendar.formatDayOfMonthLine(legitEndDayOfMonth, legitDayOfWeek);
+    FormatCalendar.formatDayOfMonthLine(endDayOfMonth, firstDayOfWeek);
 
     // フォーマットされたカレンダーを出力。
     FormatCalendar.printCalendar(FormatCalendar.titleLine,

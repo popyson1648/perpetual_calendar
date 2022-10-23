@@ -24,8 +24,8 @@ public class FormatCalendar {
     final static String MONTH_11 = "November";
     final static String MONTH_12 = "December";
 
-    final static String[] WEEK_OF_DAY_LINE = { "Su", " ", "Mo", " ", "Tu", " ", "We", " ", "Th", " ", "Fr",
-            " ", "Sa" };
+    final static String[] WEEK_OF_DAY_LINE = { "S", "u", " ", "M", "o", " ", "T", "u", " ", "W", "e", " ", "T", "h", " ", "F", "r",
+            " ", "S", "a" };
 
     final static String[] DAYS_STR = { " ", "1", " ", "2", " ", "3", " ", "4", " ", "5", " ", "6", " ", "7", " ", "8",
             " ", "9", "1", "0", "1", "1", "1", "2", "1", "3", "1", "4", "1", "5", "1", "6", "1", "7", "1", "8", "1",
@@ -167,7 +167,7 @@ public class FormatCalendar {
         // titleLine[] に 穴埋め用ブランク文字, 月名, 区切りブランク文字, 西暦年数, 穴埋め用ブランク文字 を挿入
         // トップの穴埋め用ブランク文字を挿入
         while (!(isTopBlankInsertionCpl)) {
-            for (int i = arrayIndexCnt; i < workLineTopBlankCnt + 1; i++) {
+            for (int i = arrayIndexCnt; i < workLineTopBlankCnt; i++) {
                 titleLine[i] = " ";
                 arrayIndexCnt += 1;
             }
@@ -247,7 +247,7 @@ public class FormatCalendar {
 
 
         // dayOfMonthLine1 と dayOfMonthLine5 の処理に必要な変数
-        int numOfBlankToStore; // 格納するブランク文字の数
+        int blankStoreCnt; // 格納するブランク文字の数
 
 
         // dayOfMonthLine1 の処理
@@ -261,7 +261,7 @@ public class FormatCalendar {
             case 6 : firstDayIdx = 15; break;
             case 7 : firstDayIdx = 18; break;
         }
-        numOfBlankToStore = firstDayIdx - 2;
+        blankStoreCnt = firstDayIdx - ((firstDayIdx + 1) / 3);
 
         // DayOfMonthLine1[]への格納処理
         // はじめてブランク文字を挿入する処理を含むため、storesDayOfMonth()は使用しない。
@@ -270,14 +270,14 @@ public class FormatCalendar {
             // Stores date numbers and blank
              if (ARRANGEMENT_TYPE[i].equals("num")) {
                  // Store Days
-                if (numOfBlankToStore < 1) {  
+                if (blankStoreCnt < 1) {
                     dayOfMonthLine1[i] = DAYS_STR[nextDaysIdx];
                     nextDaysIdx += 1;
                 }
                 // Store Blank
-                if (numOfBlankToStore > 0) {  
+                if (blankStoreCnt > 0) {
                     dayOfMonthLine1[i] = " ";
-                    numOfBlankToStore -= 1;
+                    blankStoreCnt -= 1;
                 }
             }
             // Store Delimited blank
@@ -285,80 +285,86 @@ public class FormatCalendar {
                 dayOfMonthLine1[i] = " ";
             }
         }
-        storesDayOfMonth(dayOfMonthLine2, nextDaysIdx);  // dayOfMonthLine2 の処理
-        storesDayOfMonth(dayOfMonthLine3, nextDaysIdx);  // dayOfMonthLine3 の処理
-        storesDayOfMonth(dayOfMonthLine4, nextDaysIdx);  // dayOfMonthLine4 の処理
+        nextDaysIdx = storesDayOfMonth(dayOfMonthLine2, nextDaysIdx);  // dayOfMonthLine2 の処理
+        nextDaysIdx = storesDayOfMonth(dayOfMonthLine3, nextDaysIdx);  // dayOfMonthLine3 の処理
+        nextDaysIdx = storesDayOfMonth(dayOfMonthLine4, nextDaysIdx);  // dayOfMonthLine4 の処理
 
         // dayOfMonthLine への DAYS_STR 格納処理の途中に、ブランク文字格納処理が発生するか
         if ( (nextDaysIdx + LINE_LENGTH) > endDayOfMonth){ //trueなら、処理対象は dayOfMonthLine5
             // dayOfMonthLine5 の処理
             storesDayOfMonthAndBlank(dayOfMonthLine5, nextDaysIdx, endDayOfMonth);
         }
-        // dayOfMonthLine5 の処理
-        storesDayOfMonth(dayOfMonthLine5, nextDaysIdx);
-
+        else {
+            // dayOfMonthLine5 の処理
+            nextDaysIdx = storesDayOfMonth(dayOfMonthLine5, nextDaysIdx);
+        }
         // dayOfMonthLine6 の処理
         storesDayOfMonthAndBlank(dayOfMonthLine6, nextDaysIdx, endDayOfMonth);
     }
 
     // フォーマットされたカレンダーを出力する関数
     public static void printCalendar(String[] titleLine,
-                                      String[] dayOfWeekLine1,
+                                      String[] dayOfWeekLine,
                                       String[] dayOfMonthLine1,
                                       String[] dayOfMonthLine2,
                                       String[] dayOfMonthLine3,
                                       String[] dayOfMonthLine4,
                                       String[] dayOfMonthLine5,
                                       String[] dayOfMonthLine6) {
+        System.out.println();
+
         for (int i=0; i<20; i++) { // print titleLine
             System.out.print(titleLine[i]);
         }
         System.out.println();
-        for (int i=0; i<20; i++) {  //print dayOfWeekLine
-            System.out.print(dayOfWeekLine1[i]);
+
+        for (int i=0; i<20; i++) { // print dayOfWeekLine
+            System.out.print(dayOfWeekLine[i]);
         }
         System.out.println();
-        for (int i=0; i<20; i++) {  //print dayOfMonthLine
-            System.out.print(dayOfMonthLine1[i]);
-        }
+
+        for (int i=0; i<6; i++) { // print dayOfMonthLines
+            switch (i) {
+                case 0 -> {
+                    for (int k=0; k<20; k++) System.out.print(dayOfMonthLine1[k]);
+                }
+                case 1 -> {
+                    for (int k=0; k<20; k++) System.out.print(dayOfMonthLine2[k]);
+                }
+                case 2 -> {
+                    for (int k=0; k<20; k++) System.out.print(dayOfMonthLine3[k]);
+                }
+                case 3 -> {
+                    for (int k=0; k<20; k++) System.out.print(dayOfMonthLine4[k]);
+                }
+                case 4 -> {
+                    for (int k=0; k<20; k++) System.out.print(dayOfMonthLine5[k]);
+                }
+                case 5 -> {
+                    for (int k=0; k<20; k++) System.out.print(dayOfMonthLine6[k]);
+                }
+            }
         System.out.println();
-        for (int i=0; i<20; i++) {
-            System.out.print(dayOfMonthLine2[i]);
-        }
-        System.out.println();
-        for (int i=0; i<20; i++) {
-            System.out.print(dayOfMonthLine3[i]);
-        }
-        System.out.println();
-        for (int i=0; i<20; i++) {
-            System.out.print(dayOfMonthLine4[i]);
-        }
-        System.out.println();
-        for (int i=0; i<20; i++) {
-            System.out.print(dayOfMonthLine5[i]);
-        }
-        System.out.println();
-        for (int i=0; i<20; i++) {  //
-            System.out.print(dayOfMonthLine6[i]);
         }
     }
 
-
     // 日付を格納する関数（ブランク文字格納あり）
-    private static void storesDayOfMonth(String[] dayOfMonthLine, int nextDaysIdx) {
-        for (int i=nextDaysIdx; i<LINE_LENGTH; i++) {
+    private static int storesDayOfMonth(String[] dayOfMonthLine, int nextDaysIdx) {
+        for (int i=0; i<LINE_LENGTH; i++) {
             if (ARRANGEMENT_TYPE[i].equals("num")) {
-                dayOfMonthLine[i] = DAYS_STR[i];
+                dayOfMonthLine[i] = DAYS_STR[nextDaysIdx];
+                nextDaysIdx += 1;
             }
             if (ARRANGEMENT_TYPE[i].equals("dblank")) {
                 dayOfMonthLine[i] = " ";
             }
         }
+        return  nextDaysIdx;
     }
 
     // 日付を格納する関数（ブランク文字格納あり）
     private static void storesDayOfMonthAndBlank(String[] dayOfMonthLine, int nextDaysIdx, int endDayOfMonth) {
-        for (int i=nextDaysIdx; i<LINE_LENGTH; i++) {
+        for (int i=0; i<LINE_LENGTH; i++) {
 
             if (endDayOfMonth == (nextDaysIdx / 2)) { // DAYS_STR格納の終了の検知
                 if (ARRANGEMENT_TYPE[i].equals("num")) {

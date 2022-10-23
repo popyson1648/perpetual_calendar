@@ -1,5 +1,4 @@
 public class FormatCalendar {
-
     /*
         October 2000       // titleLine[]
     Su Mo Tu We Th Fr Sa   // weekOfDayLine[]
@@ -10,7 +9,6 @@ public class FormatCalendar {
     29 30 31               // monthOfDayLine5[]
                            // monthOfDayLine6[]
     */
-
     final static String MONTH_1 = "January";
     final static String MONTH_2 = "February";
     final static String MONTH_3 = "March";
@@ -386,90 +384,13 @@ public class FormatCalendar {
 
 }
 
-// issues ===============================================================================
+
+// note ===============================================================================
 /*
-
-*/
-
-// memo ===============================================================================
-/*
-titleの配置
--- 挿入文字数(Len)を求める。20 / Len = middle
-Len = 13;
-mid = 20/2;  // 10
-lenMid = Math.ceil(Len/2);  // 6.5 -> 7
-
-1. 月名の長さから、区切りブランク文字挿入位置を確定
-2. 「titleLineの半分(区切りブランク文字)から左の要素数」が確定(t_Left)
-3. leading = t_Left - 月名の長さ  //先頭を埋めるブランク文字の数
-4. 配列の内容は、{leadingの数だけブランク文字を挿入, month name, 区切りブランク文字, year number}
-
  1   2   3   4   5   6   7   8   9    10  11  12  13  14  15  16  17  18  19  20
  S   u   _   M   o   _   T   u   _    W    e   _   T   h   _   F   r   _   S   a
 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [mid] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
-                             J   u    n    e   _   2   0   2   2
-
-lenLinetTop = blankType - 1
-    11        mid+2=12
-
-Weの間が10(mid)。
-Su_Mo_Tu_We_Th_Fr_Sa
-    ______|____
-   September 1990  9  type-1  mid+3(ブランク文字の位置)
-    ______|____
-    February 1990  8  type-1  mid+3
-    ______|____
-    January 1990   7  type-2  mid+2
-    ______|____
-     August 1990   6  type-2  mid+2
-    ______|____
-     March 1990    5  type-3  mid+1
-    ______|____
-       June 1990   4  type-2  mid+2
-    ______|____
-      May 1990     3  type-4  mid-1
-
-    February 1990
-Su Mo Tu We Th Fr Sa
-             1  2  3
- 4  5  6  7  8  9 10
-11 12 13 14 15 16 17
-18 19 20 21 22 23 24
-25 26 27 28
-
-   September 1990
-Su Mo Tu We Th Fr Sa
-                   1
- 2  3  4  5  6  7  8
- 9 10 11 12 13 14 15
-16 17 18 19 20 21 22
-23 24 25 26 27 28 29
-30
-
-     March 1990
-Su Mo Tu We Th Fr Sa
-             1  2  3
- 4  5  6  7  8  9 10
-11 12 13 14 15 16 17
-18 19 20 21 22 23 24
-25 26 27 28 29 30 31
-
-      May 1990
-Su Mo Tu We Th Fr Sa
-       1  2  3  4  5
- 6  7  8  9 10 11 12
-13 14 15 16 17 18 19
-20 21 22 23 24 25 26
-27 28 29 30 31
-
-     August 1990
-Su Mo Tu We Th Fr Sa
-          1  2  3  4
- 5  6  7  8  9 10 11
-12 13 14 15 16 17 18
-19 20 21 22 23 24 25
-26 27 28 29 30 31
-
+                         J   u    n    e   _   1   9   9   0
       June 1990
 Su Mo Tu We Th Fr Sa
                 1  2
@@ -477,5 +398,5 @@ Su Mo Tu We Th Fr Sa
 10 11 12 13 14 15 16
 17 18 19 20 21 22 23
 24 25 26 27 28 29 30
-
 */
+
